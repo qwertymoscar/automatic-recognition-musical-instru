@@ -1,14 +1,20 @@
+%*************************************************%
+%*******     PROJET THEMATIQUE TELECOM2     ******%
+%*************************************************%
+
+%** AUTHORS  : Mamadou DIAW & Moussa SOW 
+%** SUBJECT  : Automatic recognition of a musical instrument
+%** TEACHER  : Laurant OUDRE
+%** INSTITUT SUP' GALILEE
+%** 2029-2020
+%** Description
+%*****
+%*****
+
 clc  ; 
-clear ; 
-%_-_-_-_-_-_-_- Projet thematique TELECOM2 _-_-_-_-_-_-_-%
-% Author   : Mamadou DIAW & Moussa SOW 
-% subject : Reconnaissance automatique d'instrument de mesure 
-% teacher : Laurant OUDRE 
-%_-_-_-_-_-_ PARTIE 1_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_--%
-% ESTIMATION OF THE FUNDAMENTAL FREQUENCY OF A SIGNAL %
+clear ;
 
-[signal,fe] = audioread('Cello82.wav');
-
+[signal,fe] = audioread('Flute6.wav');
 subplot(2,1,1);
 plot(signal);
 
@@ -25,7 +31,7 @@ title('tracer du signal de base en fonction du temps');
 subplot(2,1,2);
 plot(f,abs(X));
 
-xlim([0,4000]);
+xlim([-5000,5000]);
 xlabel('frequence en hz');
 ylabel('|signal(t)|');  
 title('tracer de la transformée de fourier');
@@ -34,16 +40,24 @@ title('tracer de la transformée de fourier');
 %************Fundamentals and harmonics***********%
 %*************************************************%
 
-% getting fundamental frequency and its amplitude
-[fondamental_frequency, amplitude_max] = getFundamentaleFrequency(X,f);
-% getting features (amplitudes & frequencies) of harmoniques
-[peak__points] = getHarmonicFeatures(X, amplitude_max);
+% get fundamental frequency and its amplitude
+[fondamental_frequency, amplitude_max, loc] = getFundamentaleFrequency(X,f);
 %display of the fundamental frequency and its amplitude
 disp(['Fundamental frequency ',num2str(fondamental_frequency),' => its amplitude is ',num2str(amplitude_max)])
-% display harmonic frequencies and their amplitudes
-for p = peak__points
+
+%Get and display harmonic features
+disp('Harmonics at k*fo')
+[peak_pts] = get_Harmonic_Features__(X, f, loc);
+for p = peak_pts
     disp(['Amp ',num2str(p(1)),' a pour fréq ',num2str(f(p(2)))])
 end
+
+
+
+
+
+
+
 
 
 
