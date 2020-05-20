@@ -12,10 +12,9 @@
 %*****
 
 clc  ; 
-clear ;
-
-[signal,fe] = audioread('Flute6.wav');
-subplot(2,1,1);
+%Cello88 - Cello95 - 
+[signal,fe] = audioread('Data/Cello88.wav');
+subplot(211);
 plot(signal);
 
 N = length(signal);
@@ -28,10 +27,10 @@ X=fftshift(X);
 %*************************************************%
 xlim([10000,11000])
 title('tracer du signal de base en fonction du temps');  
-subplot(2,1,2);
+subplot(212);
 plot(f,abs(X));
 
-xlim([-5000,5000]);
+xlim([0,2000]);
 xlabel('frequence en hz');
 ylabel('|signal(t)|');  
 title('tracer de la transformée de fourier');
@@ -45,21 +44,20 @@ title('tracer de la transformée de fourier');
 %display of the fundamental frequency and its amplitude
 disp(['Fundamental frequency ',num2str(fondamental_frequency),' => its amplitude is ',num2str(amplitude_max)])
 
-%Get and display harmonic features
-disp('Harmonics at k*fo')
-[peak_pts] = get_Harmonic_Features__(X, f, loc);
-for p = peak_pts
-    disp(['Amp ',num2str(p(1)),' a pour fréq ',num2str(f(p(2)))])
+% Détermination des harmoniques
+
+[a_harmonics, f_harmonics] = getHarmonicFeatures(X, f, N, fondamental_frequency);
+disp(a_harmonics);
+disp(f_harmonics);
+
+
+% Next Step : rebuilding of the signal 
+% This step will allow us to know if the signal is the same
+rev = 0;
+for k = 1:10
+    rev = rev + a_harmonics(k)*sin(2*pi*t*k*f_harmonics(k));
 end
-
-
-
-
-
-
-
-
-
+soundsc(rev);
 
 %*************************************************%
 %*********************SUMMARY*********************%
